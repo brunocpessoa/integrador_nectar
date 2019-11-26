@@ -294,7 +294,7 @@ namespace integrador_nectar_crm
 
             return dt;
         }
-        public int ImportacaoGeral()
+        public int ImportacaoGeral(int qtdPaginas)
         {
             CultureInfo cultures = new CultureInfo("pt-BR");
 
@@ -303,15 +303,12 @@ namespace integrador_nectar_crm
             Utilitario utilitario = new Utilitario();
             var qtdDias = utilitario.qtdDiasASeremBuscadosNaAPI(dataInicialImportacao);
             int paginaBuscada = 1;
-            int paginaFinal = 71;
             int qtdRegistros = 0;
-            int qtdPaginas = 0;
 
             DAL conexao = new DAL();
 
             var todosRegistros = conexao.GetTodasOportunidades();
             var todosProdutos = conexao.GetTodosProdutos();
-            qtdPaginas = utilitario.GetQuantidadePaginasSeremImportadas();
 
             if (todosRegistros != null)
                 conexao.DeletarTodasOportunidades();
@@ -320,7 +317,7 @@ namespace integrador_nectar_crm
 
             OportunidadeRepositorio listaOportunidades = new OportunidadeRepositorio();
 
-            for (int a = 0; a <= paginaFinal; a++)
+            for (int a = 0; a <= qtdPaginas; a++)
 
             //for (int a = 1; a <= qtdDias; a++)
             {
