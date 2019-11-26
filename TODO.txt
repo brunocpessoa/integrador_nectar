@@ -1,0 +1,4 @@
+﻿Fazer com que o método qtdPaginas = utilitario.GetQuantidadePaginasSeremImportadas() salve a quantidade no banco, 
+para não precisar buscar a quantidade diariamente.
+
+Informação A
