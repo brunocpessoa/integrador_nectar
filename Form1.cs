@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,6 +17,15 @@ namespace integrador_nectar_crm
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string nomeArquivoLog = "C:\\integrador_nectar\\logs\\log_dia_" + DateTime.Now + ".txt";
+            using (StreamWriter writer = new StreamWriter(nomeArquivoLog, true))
+            {
+                writer.WriteLine("Importação iniciada em: " + DateTime.Now);
+            }
+            using (StreamWriter writer = new StreamWriter(@"C:\\integrador_nectar\\logs\\log_dia_" + DateTime.Now + ".txt", true))
+            {
+                writer.WriteLine("Quase tudo para Visual Basic");
+            }
             exibicaoSobreImportacao.Text = "Importação iniciada em: " + DateTime.Now;
 
             exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Iniciando contagem de páginas a serem buscadas..";
