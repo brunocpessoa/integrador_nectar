@@ -17,12 +17,18 @@ namespace integrador_nectar_crm
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string nomeArquivoLog = "C:\\integrador_nectar\\logs\\log_dia_" + DateTime.Now + ".txt";
+            string nomeArquivoLog = "\\integrador_nectar\\logs\\importacao_data_" + DateTime.Now + ".txt";
+            nomeArquivoLog = nomeArquivoLog.Replace("/", "_");
+
+            nomeArquivoLog = nomeArquivoLog.Replace(":", "_");
+
+            nomeArquivoLog = "C:" + nomeArquivoLog;
+
             using (StreamWriter writer = new StreamWriter(nomeArquivoLog, true))
             {
                 writer.WriteLine("Importação iniciada em: " + DateTime.Now);
             }
-            using (StreamWriter writer = new StreamWriter(@"C:\\integrador_nectar\\logs\\log_dia_" + DateTime.Now + ".txt", true))
+            using (StreamWriter writer = new StreamWriter(@nomeArquivoLog, true))
             {
                 writer.WriteLine("Quase tudo para Visual Basic");
             }
