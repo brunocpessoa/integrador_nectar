@@ -94,7 +94,6 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="progressBarImportacao\Value.cs" />
     <Compile Include="Utilitario.cs" />
     <Compile Include="OportunidadeRepositorio.cs" />
     <Compile Include="Program.cs" />

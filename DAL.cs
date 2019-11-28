@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace integrador_nectar_crm
 {
@@ -92,30 +93,75 @@ namespace integrador_nectar_crm
             return dt;
         }
 
+        //public void InserirOportunidades(int idOportunidade, string nome, string responsavel, string autor,
+        //    string autorAtualizacao, int? codFarmacia, string funilDeVendas, string origem, string agente,
+        //    string software_concorrente, string campanha, string indicador_trier_mais_1, double? valor_total, 
+        //    DateTime dataCriacao, DateTime dataConclusao)
+        //{
+
+        //    try
+        //    {
+        //        using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+        //        {
+        //            pgsqlConnection.Open();
+
+        //            string cmdInserir = $"Insert Into oportunidade(id,nome,responsavel,autor," +
+        //                $" autor_atualizacao,  cod_farmacia,  funil_vendas, origem, agente, " +
+        //                $"software_concorrente, campanha, indicador_trier_mais_1, valor_total,"+
+        //                $"data_criacao, data_conclusao) " +
+        //                $"values({idOportunidade},'{nome}','{responsavel}','{autor}','{autorAtualizacao}'," +
+        //                $"{codFarmacia},'{funilDeVendas}','{origem}','{agente}','{software_concorrente}','{campanha}'," +
+        //                $"'{indicador_trier_mais_1}','{valor_total}','{dataCriacao}', '{dataConclusao}')";
+
+        //            using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdInserir, pgsqlConnection))
+        //            {
+        //                pgsqlcommand.ExecuteNonQuery();
+        //            }
+        //        }
+        //    }
+        //    catch (NpgsqlException ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    finally
+        //    {
+        //        pgsqlConnection.Close();
+        //    }
+        //}
+
         public void InserirOportunidades(int idOportunidade, string nome, string responsavel, string autor,
             string autorAtualizacao, int? codFarmacia, string funilDeVendas, string origem, string agente,
-            string software_concorrente, string campanha, string indicador_trier_mais_1, double? valor_total, 
+            string software_concorrente, string campanha, string indicador_trier_mais_1, double? valor_total,
             DateTime dataCriacao, DateTime dataConclusao)
         {
 
+            string query = "INSERT INTO oportunidade (nome) VALUES (:nome)";
             try
             {
-                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+                using (NpgsqlConnection conn = new NpgsqlConnection(connString))
                 {
-                    //Abra a conexão com o PgSQL                  
-                    pgsqlConnection.Open();
-
-                    string cmdInserir = $"Insert Into oportunidade(id,nome,responsavel,autor," +
-                        $" autor_atualizacao,  cod_farmacia,  funil_vendas, origem, agente, " +
-                        $"software_concorrente, campanha, indicador_trier_mais_1, valor_total,"+
-                        $"data_criacao, data_conclusao) " +
-                        $"values({idOportunidade},'{nome}','{responsavel}','{autor}','{autorAtualizacao}'," +
-                        $"{codFarmacia},'{funilDeVendas}','{origem}','{agente}','{software_concorrente}','{campanha}'," +
-                        $"'{indicador_trier_mais_1}','{valor_total}','{dataCriacao}', '{dataConclusao}')";
-
-                    using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdInserir, pgsqlConnection))
+                    using (NpgsqlCommand comm = new NpgsqlCommand())
                     {
-                        pgsqlcommand.ExecuteNonQuery();
+                        comm.Connection = conn;
+                        comm.CommandText = query;
+                        NpgsqlParameter p = new NpgsqlParameter(nome, NpgsqlDbType.Text);
+                        p.NpgsqlValue = nome;
+                        comm.Parameters.Add(p);
+                        try
+                        {
+                            conn.Open();
+                            comm.ExecuteNonQuery();
+                        }
+                        catch (NpgsqlException e)
+                        {
+                            // do something with
+                            // e.ToString();
+                        }
+
                     }
                 }
             }
@@ -193,6 +239,41 @@ namespace integrador_nectar_crm
             {
                 pgsqlConnection.Close();
             }
+        }
+
+        //Configuracao
+        public DataTable GetQuantidadePaginasSeremBuscadas(string nomeConfiguracao)
+        {
+
+            DataTable dt = new DataTable();
+
+            try
+            {
+                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+                {
+                    //Abra a conexão com o PgSQL
+                    pgsqlConnection.Open();
+                    string cmdSeleciona = "Select valor from configuracao Where nome_configuracao = " + nomeConfiguracao;
+
+                    using (NpgsqlDataAdapter Adpt = new NpgsqlDataAdapter(cmdSeleciona, pgsqlConnection))
+                    {
+                        Adpt.Fill(dt);
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                pgsqlConnection.Close();
+            }
+            return dt;
         }
 
         //Produto
@@ -301,7 +382,7 @@ namespace integrador_nectar_crm
             DateTime dataInicialImportacao = Convert.ToDateTime("01/07/2019");
             DateTime dataParaBusca = dataInicialImportacao;
             Utilitario utilitario = new Utilitario();
-            var qtdDias = utilitario.qtdDiasASeremBuscadosNaAPI(dataInicialImportacao);
+            //var qtdDias = utilitario.qtdDiasASeremBuscadosNaAPI(dataInicialImportacao);
             int paginaBuscada = 1;
             int qtdRegistros = 0;
 
