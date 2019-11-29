@@ -40,6 +40,7 @@ namespace integrador_nectar_crm
             Utilitario utilitario = new Utilitario();
             int qtdPaginas = utilitario.GetQuantidadePaginasSeremImportadas();
 
+            //exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Quantidade de páginas buscadas: " + qtdPaginas;
             exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Quantidade de páginas buscadas: " + qtdPaginas;
 
 
@@ -47,6 +48,7 @@ namespace integrador_nectar_crm
 
             exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Importação concluída. " 
                 + "\n" + "Total de oportunidades importadas: "
+                //+ conexao.ImportacaoGeral(qtdPaginas);
                 + conexao.ImportacaoGeral(qtdPaginas);
         }
 

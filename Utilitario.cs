@@ -29,7 +29,8 @@ namespace integrador_nectar_crm
         {
             DAL ultimaPagina = new DAL();
             string parametro = "ultima_pagina";
-            var paginaBuscada = ultimaPagina.GetQuantidadePaginasSeremBuscadas(parametro);
+            var aux = ultimaPagina.GetQuantidadePaginasSeremBuscadas(parametro);
+            int paginaBuscada = Convert.ToInt32(aux.Rows[0]["valor"].ToString());
             OportunidadeRepositorio listaOportunidades = new OportunidadeRepositorio();
             bool existeMaisPagina = true;
 

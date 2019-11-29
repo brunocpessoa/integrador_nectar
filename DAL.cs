@@ -249,11 +249,11 @@ namespace integrador_nectar_crm
 
             try
             {
-                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+                using (pgsqlConnection = new NpgsqlConnection(connString))
                 {
                     //Abra a conexão com o PgSQL
                     pgsqlConnection.Open();
-                    string cmdSeleciona = "Select valor from configuracao Where nome_configuracao = " + nomeConfiguracao;
+                    string cmdSeleciona = "Select valor from configuracao Where nome_configuracao = '" + nomeConfiguracao +"'";
 
                     using (NpgsqlDataAdapter Adpt = new NpgsqlDataAdapter(cmdSeleciona, pgsqlConnection))
                     {
