@@ -93,75 +93,29 @@ namespace integrador_nectar_crm
             return dt;
         }
 
-        //public void InserirOportunidades(int idOportunidade, string nome, string responsavel, string autor,
-        //    string autorAtualizacao, int? codFarmacia, string funilDeVendas, string origem, string agente,
-        //    string software_concorrente, string campanha, string indicador_trier_mais_1, double? valor_total, 
-        //    DateTime dataCriacao, DateTime dataConclusao)
-        //{
-
-        //    try
-        //    {
-        //        using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
-        //        {
-        //            pgsqlConnection.Open();
-
-        //            string cmdInserir = $"Insert Into oportunidade(id,nome,responsavel,autor," +
-        //                $" autor_atualizacao,  cod_farmacia,  funil_vendas, origem, agente, " +
-        //                $"software_concorrente, campanha, indicador_trier_mais_1, valor_total,"+
-        //                $"data_criacao, data_conclusao) " +
-        //                $"values({idOportunidade},'{nome}','{responsavel}','{autor}','{autorAtualizacao}'," +
-        //                $"{codFarmacia},'{funilDeVendas}','{origem}','{agente}','{software_concorrente}','{campanha}'," +
-        //                $"'{indicador_trier_mais_1}','{valor_total}','{dataCriacao}', '{dataConclusao}')";
-
-        //            using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdInserir, pgsqlConnection))
-        //            {
-        //                pgsqlcommand.ExecuteNonQuery();
-        //            }
-        //        }
-        //    }
-        //    catch (NpgsqlException ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    finally
-        //    {
-        //        pgsqlConnection.Close();
-        //    }
-        //}
-
         public void InserirOportunidades(int idOportunidade, string nome, string responsavel, string autor,
             string autorAtualizacao, int? codFarmacia, string funilDeVendas, string origem, string agente,
             string software_concorrente, string campanha, string indicador_trier_mais_1, double? valor_total,
-            DateTime dataCriacao, DateTime dataConclusao)
+            DateTime dataCriacao, DateTime dataConclusao, int status)
         {
 
-            string query = "INSERT INTO oportunidade (nome) VALUES (:nome)";
             try
             {
-                using (NpgsqlConnection conn = new NpgsqlConnection(connString))
+                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
                 {
-                    using (NpgsqlCommand comm = new NpgsqlCommand())
-                    {
-                        comm.Connection = conn;
-                        comm.CommandText = query;
-                        NpgsqlParameter p = new NpgsqlParameter(nome, NpgsqlDbType.Text);
-                        p.NpgsqlValue = nome;
-                        comm.Parameters.Add(p);
-                        try
-                        {
-                            conn.Open();
-                            comm.ExecuteNonQuery();
-                        }
-                        catch (NpgsqlException e)
-                        {
-                            // do something with
-                            // e.ToString();
-                        }
+                    pgsqlConnection.Open();
 
+                    string cmdInserir = $"Insert Into oportunidade(id,nome,responsavel,autor," +
+                        $" autor_atualizacao,  cod_farmacia,  funil_vendas, origem, agente, " +
+                        $"software_concorrente, campanha, indicador_trier_mais_1, valor_total," +
+                        $"data_criacao, data_conclusao, status) " +
+                        $"values({idOportunidade},'{nome}','{responsavel}','{autor}','{autorAtualizacao}'," +
+                        $"{codFarmacia},'{funilDeVendas}','{origem}','{agente}','{software_concorrente}','{campanha}'," +
+                        $"'{indicador_trier_mais_1}','{valor_total}','{dataCriacao}', '{dataConclusao}',{status})";
+
+                    using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdInserir, pgsqlConnection))
+                    {
+                        pgsqlcommand.ExecuteNonQuery();
                     }
                 }
             }
@@ -178,6 +132,52 @@ namespace integrador_nectar_crm
                 pgsqlConnection.Close();
             }
         }
+
+        //public void InserirOportunidades(int idOportunidade, string nome, string responsavel, string autor,
+        //    string autorAtualizacao, int? codFarmacia, string funilDeVendas, string origem, string agente,
+        //    string software_concorrente, string campanha, string indicador_trier_mais_1, double? valor_total,
+        //    DateTime dataCriacao, DateTime dataConclusao)
+        //{
+
+        //    string query = "INSERT INTO oportunidade (nome) VALUES (:nome)";
+        //    try
+        //    {
+        //        using (NpgsqlConnection conn = new NpgsqlConnection(connString))
+        //        {
+        //            using (NpgsqlCommand comm = new NpgsqlCommand())
+        //            {
+        //                comm.Connection = conn;
+        //                comm.CommandText = query;
+        //                NpgsqlParameter p = new NpgsqlParameter(nome, NpgsqlDbType.Text);
+        //                p.NpgsqlValue = nome;
+        //                comm.Parameters.Add(p);
+        //                try
+        //                {
+        //                    conn.Open();
+        //                    comm.ExecuteNonQuery();
+        //                }
+        //                catch (NpgsqlException e)
+        //                {
+        //                    // do something with
+        //                    // e.ToString();
+        //                }
+
+        //            }
+        //        }
+        //    }
+        //    catch (NpgsqlException ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    finally
+        //    {
+        //        pgsqlConnection.Close();
+        //    }
+        //}
 
         public void AtualizarOportunidade(int codigo, string email, int idade)
         {
@@ -412,12 +412,13 @@ namespace integrador_nectar_crm
                 {
                     string valorAjustado = Convert.ToString(item.valorTotal);
                     valorAjustado = valorAjustado.Replace(",", ".");
+                    string nomeAjustado = item.nome.Replace("'", "_");
 
-                    conexao.InserirOportunidades(item.id, item.nome, item.responsavel.nome, item.autor.nome,
+                    conexao.InserirOportunidades(item.id, nomeAjustado, item.responsavel.nome, item.autor.nome,
                         item.autorAtualizacao.nome, String.IsNullOrEmpty(item.cliente.codigo)?0 : Convert.ToInt32(item.cliente.codigo), item.funilVenda.nome, item.origem.nome, item.camposPersonalizados.agente,
                        item.camposPersonalizados.Software_Concorrente, item.camposPersonalizados.campanha,
                        item.camposPersonalizados.Indicador_Trier_Mais_1, Convert.ToDouble(valorAjustado), item.dataCriacao,
-                       item.dataConclusao);
+                       item.dataConclusao, item.status);
                     var qtdProdutos = item.produtos.Count;
                     for (int i = 0; i < qtdProdutos; i++)
                     {
