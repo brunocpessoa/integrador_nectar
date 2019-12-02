@@ -27,10 +27,11 @@ namespace integrador_nectar_crm
 
         public int GetQuantidadePaginasSeremImportadas()
         {
-            DAL ultimaPagina = new DAL();
+            DAL paginacao = new DAL();
             string parametro = "ultima_pagina";
-            var aux = ultimaPagina.GetQuantidadePaginasSeremBuscadas(parametro);
+            var aux = paginacao.GetQuantidadePaginasSeremBuscadas(parametro);
             int paginaBuscada = Convert.ToInt32(aux.Rows[0]["valor"].ToString());
+            int valorInicial = paginaBuscada;
             OportunidadeRepositorio listaOportunidades = new OportunidadeRepositorio();
             bool existeMaisPagina = true;
 
@@ -44,7 +45,13 @@ namespace integrador_nectar_crm
                 }
                 else
                 {
-                    existeMaisPagina = false;
+                    if (valorInicial != paginaBuscada)
+                    {
+                        paginacao.DeletarConfiguracaoPaginasBuscadas();
+                        paginacao.InserirConfiguracao("ultima_pagina", Convert.ToString(paginaBuscada));
+                    }
+                        
+                existeMaisPagina = false;
                     return paginaBuscada;
                 }
                 

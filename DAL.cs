@@ -276,6 +276,69 @@ namespace integrador_nectar_crm
             return dt;
         }
 
+        public void DeletarConfiguracaoPaginasBuscadas()
+        {
+            try
+            {
+                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+                {
+                    //abre a conexao                
+                    pgsqlConnection.Open();
+
+                    string cmdDeletar = String.Format("DELETE FROM configuracao");
+
+                    using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdDeletar, pgsqlConnection))
+                    {
+                        pgsqlcommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                pgsqlConnection.Close();
+            }
+        }
+
+        public void InserirConfiguracao(string nomeConfiguracao, string novoValorPaginasBuscadas)
+        {
+
+            try
+            {
+                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+                {
+                    pgsqlConnection.Open();
+
+                    string cmdInserir = $"Insert Into configuracao(nome_configuracao, valor)" +
+                        $"values('{nomeConfiguracao}','{novoValorPaginasBuscadas}')";
+
+                    using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdInserir, pgsqlConnection))
+                    {
+                        pgsqlcommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                pgsqlConnection.Close();
+            }
+        }
+
         //Produto
         public void InserirProduto(int idProduto, int refId, double valorUnitario, double valorTotal, double quantidade,
             string nomeProduto, int idOportunidade)
