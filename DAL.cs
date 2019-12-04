@@ -9,10 +9,10 @@ namespace integrador_nectar_crm
 {
     public class DAL
     {
-        static string serverName = "localhost";
+        static string serverName = "dbneo.triersistemas.com.br";
         static string port = "5432";
         static string userName = "postgres";
-        static string password = "postgres";
+        static string password = "postgres!@09042003";
         static string databaseName = "nectar";
         NpgsqlConnection pgsqlConnection = null;
         string connString = null;

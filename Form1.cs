@@ -62,23 +62,46 @@ namespace integrador_nectar_crm
         {
             DateTime HorarioAtual = DateTime.Now;
 
-            if ((HorarioAtual.Hour == 18) && (HorarioAtual.Minute == 31))
+            if ((HorarioAtual.Hour == 03) && (HorarioAtual.Minute == 00))
             {
-                exibicaoSobreImportacao.Text = "Importação iniciada em: " + DateTime.Now;
+                string nomeArquivoLog = "\\integrador_nectar\\logs\\importacao_data_" + DateTime.Now + ".txt";
+                string texoLogCompleto;
+                nomeArquivoLog = nomeArquivoLog.Replace("/", "_");
 
-                exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Iniciando contagem de páginas a serem buscadas..";
+                nomeArquivoLog = nomeArquivoLog.Replace(":", "_");
+
+                nomeArquivoLog = "C:" + nomeArquivoLog;
+
+                exibicaoSobreImportacao.Text = "Importação iniciada em: " + DateTime.Now;
+                texoLogCompleto = "Importação iniciada em: " + DateTime.Now;
+
+                exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Iniciando contagem de páginas a serem buscadas.";
+                texoLogCompleto = texoLogCompleto + "\n" + "Iniciando contagem de páginas a serem buscadas.";
                 DAL conexao = new DAL();
 
                 Utilitario utilitario = new Utilitario();
                 int qtdPaginas = utilitario.GetQuantidadePaginasSeremImportadas();
 
-                exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Importação iniciada";
-
                 exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Quantidade de páginas buscadas: " + qtdPaginas;
+                texoLogCompleto = texoLogCompleto + "\n" + "Quantidade de páginas buscadas: " + qtdPaginas;
+
+                exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Importação iniciada";
+                texoLogCompleto = texoLogCompleto + "\n" + "Importação iniciada";
+
+                int qtdOportunidades = conexao.ImportacaoGeral(qtdPaginas);
 
                 exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Importação concluída. "
                     + "\n" + "Total de oportunidades importadas: "
-                    + conexao.ImportacaoGeral(qtdPaginas);
+                    + qtdOportunidades;
+
+                texoLogCompleto = texoLogCompleto + "\n" + "Importação concluída. "
+                    + "\n" + "Total de oportunidades importadas: "
+                    + qtdOportunidades;
+
+                using (StreamWriter writer = new StreamWriter(@nomeArquivoLog, true))
+                {
+                    writer.WriteLine(texoLogCompleto);
+                }
             }
         }
     }
