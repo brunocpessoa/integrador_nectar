@@ -253,7 +253,7 @@ namespace integrador_nectar_crm
                 {
                     //Abra a conexão com o PgSQL
                     pgsqlConnection.Open();
-                    string cmdSeleciona = "Select valor from configuracao Where nome_configuracao = '" + nomeConfiguracao +"'";
+                    string cmdSeleciona = "Select valor from configuracao Where nome_configuracao = '" + nomeConfiguracao + "'";
 
                     using (NpgsqlDataAdapter Adpt = new NpgsqlDataAdapter(cmdSeleciona, pgsqlConnection))
                     {
@@ -445,7 +445,6 @@ namespace integrador_nectar_crm
             DateTime dataInicialImportacao = Convert.ToDateTime("01/07/2019");
             DateTime dataParaBusca = dataInicialImportacao;
             Utilitario utilitario = new Utilitario();
-            //var qtdDias = utilitario.qtdDiasASeremBuscadosNaAPI(dataInicialImportacao);
             int paginaBuscada = 1;
             int qtdRegistros = 0;
 
@@ -463,10 +462,7 @@ namespace integrador_nectar_crm
 
             for (int a = 0; a <= qtdPaginas; a++)
 
-            //for (int a = 1; a <= qtdDias; a++)
             {
-                //List<Oportunidade> lista = listaOportunidades.GetOportunidadesAsyncPaginado(paginaBuscada);
-
                 List<Oportunidade> lista = listaOportunidades.GetOportunidadesAsyncPaginado(paginaBuscada);
 
                 qtdRegistros = qtdRegistros + lista.Count;
@@ -478,7 +474,7 @@ namespace integrador_nectar_crm
                     string nomeAjustado = item.nome.Replace("'", "_");
 
                     conexao.InserirOportunidades(item.id, nomeAjustado, item.responsavel.nome, item.autor.nome,
-                        item.autorAtualizacao.nome, String.IsNullOrEmpty(item.cliente.codigo)?0 : Convert.ToInt32(item.cliente.codigo), item.funilVenda.nome, item.origem.nome, item.camposPersonalizados.agente,
+                        item.autorAtualizacao.nome, String.IsNullOrEmpty(item.cliente.codigo) ? 0 : Convert.ToInt32(item.cliente.codigo), item.funilVenda.nome, item.origem.nome, item.camposPersonalizados.agente,
                        item.camposPersonalizados.Software_Concorrente, item.camposPersonalizados.campanha,
                        item.camposPersonalizados.Indicador_Trier_Mais_1, Convert.ToDouble(valorAjustado), item.dataCriacao,
                        item.dataConclusao, item.status);
@@ -490,7 +486,7 @@ namespace integrador_nectar_crm
                         string valorTotalProduto = Convert.ToString(item.produtos[i].valorTotal);
                         valorTotalProduto = valorTotalProduto.Replace(",", ".");
 
-                        conexao.InserirProduto(item.produtos[i].id, item.produtos[i].refId, 
+                        conexao.InserirProduto(item.produtos[i].id, item.produtos[i].refId,
                             Convert.ToDouble(valorUnitarioProduto),
                             Convert.ToDouble(valorTotalProduto), item.produtos[i].quantidade, item.produtos[i].nome, item.id);
                     }
