@@ -469,14 +469,14 @@ namespace integrador_nectar_crm
 
                 lista.ForEach(item =>
                 {
-                    string valorAjustado = Convert.ToString(item.valorTotal);
-                    valorAjustado = valorAjustado.Replace(",", ".");
+                    //string valorAjustado = Convert.ToString(item.valorTotal);
+                    //valorAjustado = valorAjustado.Replace(",", ".");
                     string nomeAjustado = item.nome.Replace("'", "_");
 
                     conexao.InserirOportunidades(item.id, nomeAjustado, item.responsavel.nome, item.autor.nome,
                         item.autorAtualizacao.nome, String.IsNullOrEmpty(item.cliente.codigo) ? 0 : Convert.ToInt32(item.cliente.codigo), item.funilVenda.nome, item.origem.nome, item.camposPersonalizados.agente,
                        item.camposPersonalizados.Software_Concorrente, item.camposPersonalizados.campanha,
-                       item.camposPersonalizados.Indicador_Trier_Mais_1, Convert.ToDouble(valorAjustado), item.dataCriacao,
+                       item.camposPersonalizados.Indicador_Trier_Mais_1, item.valorTotal, item.dataCriacao,
                        item.dataConclusao, item.status);
                     var qtdProdutos = item.produtos.Count;
                     for (int i = 0; i < qtdProdutos; i++)
