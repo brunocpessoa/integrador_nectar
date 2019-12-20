@@ -94,6 +94,87 @@ namespace integrador_nectar_crm
         public int id { get; set; }
     }
 
+    public class RegiaoPais
+    {
+        public string nome { get; set; }
+        public int id { get; set; }
+    }
+
+    public class Pais
+    {
+        public string nome { get; set; }
+        public int id { get; set; }
+    }
+
+    public class RegiaoEstado
+    {
+        public int id { get; set; }
+        public string nome { get; set; }
+        public string sigla { get; set; }
+        public Pais pais { get; set; }
+    }
+
+    public class RegiaoMunicipio
+    {
+        public int id { get; set; }
+        public string nome { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
+        public int codigoUnidadeGeografica { get; set; }
+        public int codigoMunicipioIbge { get; set; }
+        public bool isCapital { get; set; }
+    }
+    public class EstadoObject
+    {
+        public int id { get; set; }
+        public string nome { get; set; }
+        public string sigla { get; set; }
+    }
+
+    public class PaisObject
+    {
+        public string nome { get; set; }
+        public int id { get; set; }
+    }
+
+    public class Estado
+    {
+        public int id { get; set; }
+        public string nome { get; set; }
+        public string sigla { get; set; }
+    }
+
+    public class MunicipioObject
+    {
+        public int id { get; set; }
+        public string nome { get; set; }
+        public Estado estado { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
+        public int codigoUnidadeGeografica { get; set; }
+        public int codigoMunicipioIbge { get; set; }
+        public bool isCapital { get; set; }
+    }
+
+    public class Endereco
+    {
+        public int id { get; set; }
+        public string cep { get; set; }
+        public string tipo { get; set; }
+        public bool principal { get; set; }
+        public string bairro { get; set; }
+        public string logradouro { get; set; }
+        public string endereco { get; set; }
+        public string estado { get; set; }
+        public EstadoObject estadoObject { get; set; }
+        public string pais { get; set; }
+        public PaisObject paisObject { get; set; }
+        public string municipio { get; set; }
+        public MunicipioObject municipioObject { get; set; }
+        public int? codigoMunicipioIbge { get; set; }
+        public string complemento { get; set; }
+        public string numero { get; set; }
+    }
 
     public class Oportunidade
     {
@@ -131,5 +212,48 @@ namespace integrador_nectar_crm
         public int diasEstagnacaoNaEtapa { get; set; }
         public int diasSemInteracao { get; set; }
         public int quantidadeProdutos { get; set; }
+    }
+
+    public class Contato
+    {
+        public int id { get; set; }
+        public Autor autor { get; set; }
+        public AutorAtualizacao autorAtualizacao { get; set; }
+        public Responsavel responsavel { get; set; }
+        public string codigo { get; set; }
+        public string nome { get; set; }
+        public string razaoSocial { get; set; }
+        public string rg { get; set; }
+        public DateTime dataCriacao { get; set; }
+        public DateTime dataAtualizacao { get; set; }
+        public string observacao { get; set; }
+        public string cargo { get; set; }
+        public string indicadoPor { get; set; }
+        public string facebook { get; set; }
+        public string linkedin { get; set; }
+        public string twitter { get; set; }
+        public string skype { get; set; }
+        public string segmento { get; set; }
+        public RegiaoPais regiaoPais { get; set; }
+        public RegiaoEstado regiaoEstado { get; set; }
+        public bool ativo { get; set; }
+        public bool empresa { get; set; }
+        public int constante { get; set; }
+        public int tarefas { get; set; }
+        public int compromissos { get; set; }
+        public int oportunidades { get; set; }
+        public List<object> telefones { get; set; }
+        public string telefonePrincipal { get; set; }
+        public string telefone { get; set; }
+        public List<string> emails { get; set; }
+        public string emailPrincipal { get; set; }
+        public string email { get; set; }
+        public List<object> contatos { get; set; }
+        public List<Endereco> enderecos { get; set; }
+        public CamposPersonalizados camposPersonalizados { get; set; }
+        public List<object> listas { get; set; }
+        public bool isEmpresa { get; set; }
+        public RegiaoMunicipio regiaoMunicipio { get; set; }
+        public string cnpj { get; set; }
     }
 }

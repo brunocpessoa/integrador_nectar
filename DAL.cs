@@ -133,52 +133,6 @@ namespace integrador_nectar_crm
             }
         }
 
-        //public void InserirOportunidades(int idOportunidade, string nome, string responsavel, string autor,
-        //    string autorAtualizacao, int? codFarmacia, string funilDeVendas, string origem, string agente,
-        //    string software_concorrente, string campanha, string indicador_trier_mais_1, double? valor_total,
-        //    DateTime dataCriacao, DateTime dataConclusao)
-        //{
-
-        //    string query = "INSERT INTO oportunidade (nome) VALUES (:nome)";
-        //    try
-        //    {
-        //        using (NpgsqlConnection conn = new NpgsqlConnection(connString))
-        //        {
-        //            using (NpgsqlCommand comm = new NpgsqlCommand())
-        //            {
-        //                comm.Connection = conn;
-        //                comm.CommandText = query;
-        //                NpgsqlParameter p = new NpgsqlParameter(nome, NpgsqlDbType.Text);
-        //                p.NpgsqlValue = nome;
-        //                comm.Parameters.Add(p);
-        //                try
-        //                {
-        //                    conn.Open();
-        //                    comm.ExecuteNonQuery();
-        //                }
-        //                catch (NpgsqlException e)
-        //                {
-        //                    // do something with
-        //                    // e.ToString();
-        //                }
-
-        //            }
-        //        }
-        //    }
-        //    catch (NpgsqlException ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    finally
-        //    {
-        //        pgsqlConnection.Close();
-        //    }
-        //}
-
         public void AtualizarOportunidade(int codigo, string email, int idade)
         {
             try
@@ -220,6 +174,104 @@ namespace integrador_nectar_crm
                     pgsqlConnection.Open();
 
                     string cmdDeletar = String.Format("DELETE FROM oportunidade");
+
+                    using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdDeletar, pgsqlConnection))
+                    {
+                        pgsqlcommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                pgsqlConnection.Close();
+            }
+        }
+
+        //Contatos
+        public void InserirContatos(int idContato, string nomeContato, string autorContato,
+            DateTime dataCriacaoContato)
+        {
+
+            try
+            {
+                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+                {
+                    pgsqlConnection.Open();
+
+                    string cmdInserir = $"Insert Into contato(id_contato,nome_contato,autor_contato,data_criacao_contato)"+
+                        $"values({idContato},'{nomeContato}','{autorContato}','{dataCriacaoContato}')";
+
+                    using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdInserir, pgsqlConnection))
+                    {
+                        pgsqlcommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                pgsqlConnection.Close();
+            }
+        }
+
+        public DataTable GetTodosContatos()
+        {
+
+            DataTable dt = new DataTable();
+
+            try
+            {
+                using (pgsqlConnection = new NpgsqlConnection(connString))
+                {
+                    pgsqlConnection.Open();
+                    string cmdSeleciona = "Select * from contato order by id_contato";
+
+                    using (NpgsqlDataAdapter Adpt = new NpgsqlDataAdapter(cmdSeleciona, pgsqlConnection))
+                    {
+                        Adpt.Fill(dt);
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                pgsqlConnection.Close();
+            }
+
+            return dt;
+        }
+        public void DeletarTodosContatos()
+        {
+            try
+            {
+                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+                {
+                    //abre a conexao                
+                    pgsqlConnection.Open();
+
+                    string cmdDeletar = String.Format("DELETE FROM contato");
 
                     using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdDeletar, pgsqlConnection))
                     {
@@ -442,9 +494,6 @@ namespace integrador_nectar_crm
         {
             CultureInfo cultures = new CultureInfo("pt-BR");
 
-            DateTime dataInicialImportacao = Convert.ToDateTime("01/07/2019");
-            DateTime dataParaBusca = dataInicialImportacao;
-            Utilitario utilitario = new Utilitario();
             int paginaBuscada = 1;
             int qtdRegistros = 0;
 
@@ -469,8 +518,6 @@ namespace integrador_nectar_crm
 
                 lista.ForEach(item =>
                 {
-                    //string valorAjustado = Convert.ToString(item.valorTotal);
-                    //valorAjustado = valorAjustado.Replace(",", ".");
                     string nomeAjustado = item.nome.Replace("'", "_");
 
                     conexao.InserirOportunidades(item.id, nomeAjustado, item.responsavel.nome, item.autor.nome,
@@ -491,7 +538,41 @@ namespace integrador_nectar_crm
                             Convert.ToDouble(valorTotalProduto), item.produtos[i].quantidade, item.produtos[i].nome, item.id);
                     }
                 });
-                dataParaBusca = dataInicialImportacao.AddDays(a);
+                paginaBuscada = paginaBuscada + 1;
+            }
+            return qtdRegistros;
+        }
+
+        public int ImportacaoContatos(int qtdPaginas)
+        {
+            CultureInfo cultures = new CultureInfo("pt-BR");
+
+            int paginaBuscada = 1;
+            int qtdRegistros = 0;
+
+            DAL conexao = new DAL();
+
+            var todosContatos = conexao.GetTodosContatos();
+
+            if (todosContatos != null)
+                conexao.DeletarTodosContatos();
+            
+
+            ContatoRepositorio listaContatos = new ContatoRepositorio();
+
+            for (int a = 0; a <= qtdPaginas; a++)
+
+            {
+                List<Contato> lista = listaContatos.GetContatosAsyncPaginado(paginaBuscada);
+
+                qtdRegistros = qtdRegistros + lista.Count;
+
+                lista.ForEach(item =>
+                {
+                    string nomeAjustado = item.nome.Replace("'", "_");
+
+                    conexao.InserirContatos(item.id, nomeAjustado, item.autor.nome, item.dataCriacao);
+                });
                 paginaBuscada = paginaBuscada + 1;
             }
             return qtdRegistros;

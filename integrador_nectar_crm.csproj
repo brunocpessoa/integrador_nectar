@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Agendador.cs" />
+    <Compile Include="ContatoRepositorio.cs" />
     <Compile Include="DAL.cs" />
     <Compile Include="Model\Oportunidade.cs" />
     <Compile Include="Form1.cs">
