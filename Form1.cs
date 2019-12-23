@@ -29,10 +29,10 @@ namespace integrador_nectar_crm
 
             nomeArquivoLog = "C:" + nomeArquivoLog;
 
-            //Oportunidades
             exibicaoSobreImportacao.Text = "Importação de oportunidades iniciada em: " + DateTime.Now;
             texoLogCompleto = "Importação de oportunidades iniciada em: " + DateTime.Now;
 
+            //Oportunidades
             exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Iniciando contagem de páginas de oportunidades a serem buscadas.";
             texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Iniciando contagem de páginas de oportunidades a serem buscadas.";
 
@@ -76,6 +76,28 @@ namespace integrador_nectar_crm
                 + "\n" + "Total de contatos importados: "
                 + qtdContatos;
 
+            //Tarefas
+            exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Iniciando contagem de páginas de tarefas a serem buscadas.";
+            texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Iniciando contagem de páginas de tarefas a serem buscadas.";
+
+            int qtdPaginasTarefas = utilitario.GetQuantidadePaginasTarefasSeremImportadas();
+
+            exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Quantidade de páginas de tarefas buscadas: " + qtdPaginasTarefas;
+            texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Quantidade de páginas de tarefas buscadas: " + qtdPaginasTarefas;
+
+            exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Importação de tarefas iniciada";
+            texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Importação de tarefas iniciada";
+
+            int qtdTarefas = conexao.ImportacaoTarefas(qtdPaginasTarefas);
+
+            exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Importação de tarefas concluída. "
+                + "\n" + "Total de tarefas importadas: "
+                + qtdTarefas;
+
+            texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Importação de tarefas concluída. "
+                + "\n" + "Total de tarefas importadas: "
+                + qtdTarefas;
+
             using (StreamWriter writer = new StreamWriter(@nomeArquivoLog, true))
             {
                 writer.WriteLine(texoLogCompleto);
@@ -101,10 +123,10 @@ namespace integrador_nectar_crm
 
                 nomeArquivoLog = "C:" + nomeArquivoLog;
 
-                //Oportunidades
                 exibicaoSobreImportacao.Text = "Importação de oportunidades iniciada em: " + DateTime.Now;
                 texoLogCompleto = "Importação de oportunidades iniciada em: " + DateTime.Now;
 
+                //Oportunidades
                 exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Iniciando contagem de páginas de oportunidades a serem buscadas.";
                 texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Iniciando contagem de páginas de oportunidades a serem buscadas.";
 
@@ -147,6 +169,28 @@ namespace integrador_nectar_crm
                 texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Importação de contatos concluída. "
                     + "\n" + "Total de contatos importados: "
                     + qtdContatos;
+
+                //Tarefas
+                exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Iniciando contagem de páginas de tarefas a serem buscadas.";
+                texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Iniciando contagem de páginas de tarefas a serem buscadas.";
+
+                int qtdPaginasTarefas = utilitario.GetQuantidadePaginasTarefasSeremImportadas();
+
+                exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Quantidade de páginas de tarefas buscadas: " + qtdPaginasTarefas;
+                texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Quantidade de páginas de tarefas buscadas: " + qtdPaginasTarefas;
+
+                exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Importação de tarefas iniciada";
+                texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Importação de tarefas iniciada";
+
+                int qtdTarefas = conexao.ImportacaoTarefas(qtdPaginasTarefas);
+
+                exibicaoSobreImportacao.Text = exibicaoSobreImportacao.Text + "\n" + "Importação de tarefas concluída. "
+                    + "\n" + "Total de tarefas importadas: "
+                    + qtdTarefas;
+
+                texoLogCompleto = "\n" + texoLogCompleto + "\n" + "Importação de tarefas concluída. "
+                    + "\n" + "Total de tarefas importadas: "
+                    + qtdTarefas;
 
                 using (StreamWriter writer = new StreamWriter(@nomeArquivoLog, true))
                 {

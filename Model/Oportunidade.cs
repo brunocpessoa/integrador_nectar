@@ -256,4 +256,29 @@ namespace integrador_nectar_crm
         public RegiaoMunicipio regiaoMunicipio { get; set; }
         public string cnpj { get; set; }
     }
+
+    //Tarefa
+    public class Tarefa
+    {
+        public int id { get; set; }
+        public DateTime dataLimite { get; set; }
+        public DateTime dataCriacao { get; set; }
+        public DateTime dataAtualizacao { get; set; }
+        public string titulo { get; set; }
+        public int status { get; set; }
+        public Responsavel responsavel { get; set; }
+        public Cliente cliente { get; set; }
+        public int prioridade { get; set; }
+        public int tipo { get; set; }
+        public TarefaTipo tarefaTipo { get; set; }
+        public string descricao { get; set; }
+        public Oportunidade oportunidade { get; set; }
+    }
+    public class TarefaTipo
+    {
+        public int id { get; set; }
+        public string nome { get; set; }
+        public bool ativo { get; set; }
+        public int natureza { get; set; }
+    }
 }

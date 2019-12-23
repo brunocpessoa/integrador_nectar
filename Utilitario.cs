@@ -47,7 +47,7 @@ namespace integrador_nectar_crm
                 {
                     if (valorInicial != paginaBuscada)
                     {
-                        paginacao.DeletarConfiguracaoPaginasBuscadas();
+                        paginacao.DeletarConfiguracaoPaginasBuscadas(parametro);
                         paginacao.InserirConfiguracao("ultima_pagina", Convert.ToString(paginaBuscada));
                     }
                         
@@ -81,8 +81,42 @@ namespace integrador_nectar_crm
                 {
                     if (valorInicial != paginaBuscada)
                     {
-                        paginacao.DeletarConfiguracaoPaginasBuscadas();
-                        paginacao.InserirConfiguracao("ultima_pagina", Convert.ToString(paginaBuscada));
+                        paginacao.DeletarConfiguracaoPaginasBuscadas(parametro);
+                        paginacao.InserirConfiguracao("ultima_pagina_contatos", Convert.ToString(paginaBuscada));
+                    }
+
+                    existeMaisPagina = false;
+                    return paginaBuscada;
+                }
+
+            }
+            return paginaBuscada;
+        }
+
+        public int GetQuantidadePaginasTarefasSeremImportadas()
+        {
+            DAL paginacao = new DAL();
+            string parametro = "ultima_pagina_tarefas";
+            var aux = paginacao.GetQuantidadePaginasSeremBuscadas(parametro);
+            int paginaBuscada = Convert.ToInt32(aux.Rows[0]["valor"].ToString());
+            int valorInicial = paginaBuscada;
+            TarefaRepositorio listaTarefas = new TarefaRepositorio();
+            bool existeMaisPagina = true;
+
+            while (existeMaisPagina)
+            {
+                List<Tarefa> lista = listaTarefas.GetTarefasAsyncPaginado(paginaBuscada);
+
+                if (lista.Count > 0)
+                {
+                    paginaBuscada = paginaBuscada + 1;
+                }
+                else
+                {
+                    if (valorInicial != paginaBuscada)
+                    {
+                        paginacao.DeletarConfiguracaoPaginasBuscadas(parametro);
+                        paginacao.InserirConfiguracao("ultima_pagina_tarefas", Convert.ToString(paginaBuscada));
                     }
 
                     existeMaisPagina = false;

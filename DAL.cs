@@ -293,6 +293,106 @@ namespace integrador_nectar_crm
             }
         }
 
+        //Tarefas
+        public void InserirTarefas(int idTarefa, string tituloTarefa, string responsavel,int tipoTarefa, int statusTarefa,
+            DateTime dataLimite)
+        {
+
+            try
+            {
+                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+                {
+                    pgsqlConnection.Open();
+
+                    string cmdInserir = $"Insert Into tarefa(id_tarefa,titulo_tarefa,responsavel_tarefa,tipo_tarefa," +
+                        $"status,data_limite)" +
+                        $"values({idTarefa},'{tituloTarefa}','{responsavel}',{tipoTarefa}," +
+                        $"{statusTarefa},'{dataLimite}')";
+
+                    using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdInserir, pgsqlConnection))
+                    {
+                        pgsqlcommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                pgsqlConnection.Close();
+            }
+        }
+
+        public DataTable GetTodasTarefas()
+        {
+
+            DataTable dt = new DataTable();
+
+            try
+            {
+                using (pgsqlConnection = new NpgsqlConnection(connString))
+                {
+                    pgsqlConnection.Open();
+                    string cmdSeleciona = "Select * from tarefa order by id_tarefa";
+
+                    using (NpgsqlDataAdapter Adpt = new NpgsqlDataAdapter(cmdSeleciona, pgsqlConnection))
+                    {
+                        Adpt.Fill(dt);
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                pgsqlConnection.Close();
+            }
+
+            return dt;
+        }
+        public void DeletarTodasTarefas()
+        {
+            try
+            {
+                using (NpgsqlConnection pgsqlConnection = new NpgsqlConnection(connString))
+                {
+                    //abre a conexao                
+                    pgsqlConnection.Open();
+
+                    string cmdDeletar = String.Format("DELETE FROM tarefa");
+
+                    using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdDeletar, pgsqlConnection))
+                    {
+                        pgsqlcommand.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                pgsqlConnection.Close();
+            }
+        }
+
         //Configuracao
         public DataTable GetQuantidadePaginasSeremBuscadas(string nomeConfiguracao)
         {
@@ -328,7 +428,7 @@ namespace integrador_nectar_crm
             return dt;
         }
 
-        public void DeletarConfiguracaoPaginasBuscadas()
+        public void DeletarConfiguracaoPaginasBuscadas(string configuracaoExluir)
         {
             try
             {
@@ -337,7 +437,7 @@ namespace integrador_nectar_crm
                     //abre a conexao                
                     pgsqlConnection.Open();
 
-                    string cmdDeletar = String.Format("DELETE FROM configuracao");
+                    string cmdDeletar = String.Format("DELETE FROM configuracao WHERE nome_configuracao = '" + configuracaoExluir + "'");
 
                     using (NpgsqlCommand pgsqlcommand = new NpgsqlCommand(cmdDeletar, pgsqlConnection))
                     {
@@ -572,6 +672,42 @@ namespace integrador_nectar_crm
                     string nomeAjustado = item.nome.Replace("'", "_");
 
                     conexao.InserirContatos(item.id, nomeAjustado, item.autor.nome, item.dataCriacao);
+                });
+                paginaBuscada = paginaBuscada + 1;
+            }
+            return qtdRegistros;
+        }
+
+        public int ImportacaoTarefas(int qtdPaginas)
+        {
+            CultureInfo cultures = new CultureInfo("pt-BR");
+
+            int paginaBuscada = 1;
+            int qtdRegistros = 0;
+
+            DAL conexao = new DAL();
+
+            var todasTarefas = conexao.GetTodasTarefas();
+
+            if (todasTarefas != null)
+                conexao.DeletarTodasTarefas();
+
+
+            TarefaRepositorio listaTarefas = new TarefaRepositorio();
+
+            for (int a = 0; a <= qtdPaginas; a++)
+
+            {
+                List<Tarefa> lista = listaTarefas.GetTarefasAsyncPaginado(paginaBuscada);
+
+                qtdRegistros = qtdRegistros + lista.Count;
+
+                lista.ForEach(item =>
+                {
+                    string nomeAjustado = item.titulo.Replace("'", "_");
+
+                    conexao.InserirTarefas(item.id, nomeAjustado, item.responsavel.nome,item.tipo,item.status, 
+                        item.dataCriacao);
                 });
                 paginaBuscada = paginaBuscada + 1;
             }
